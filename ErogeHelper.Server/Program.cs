@@ -23,7 +23,8 @@ namespace ErogeHelper.Server
                 {
                     webBuilder.UseUrls("http://*:5000");
                     // XXX: Pay attention to the locate of db.sqlite
-                    // webBuilder.UseContentRoot(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location));
+                    var path = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) ?? string.Empty;
+                    webBuilder.UseContentRoot(path + @"/../../../../");
                     webBuilder.UseStartup<Startup>();
                 });
     }
