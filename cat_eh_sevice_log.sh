@@ -1,0 +1,1 @@
+journalctl -fu eh.service --since "2016-10-18"
