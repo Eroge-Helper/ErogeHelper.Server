@@ -6,6 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using System.Threading.Tasks;
+using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace ErogeHelper.Server
 {
@@ -37,11 +40,11 @@ namespace ErogeHelper.Server
                     options.JsonSerializerOptions.IgnoreNullValues = true;
                 });
 
-            // XXX: ÏìÓ¦Ñ¹Ëõ
+            // XXX: ï¿½ï¿½Ó¦Ñ¹ï¿½ï¿½
             services.AddResponseCompression();
 
             services.AddDbContext<MainDbContext>(options =>
-                options.UseSqlite(Configuration.GetConnectionString("MainDatabase")));
+                options.UseSqlite("Filename=db.sqlite"));
 
             services.AddSwaggerGen(c =>
             {
@@ -50,7 +53,7 @@ namespace ErogeHelper.Server
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
             if (env.IsDevelopment())
             {
@@ -72,6 +75,17 @@ namespace ErogeHelper.Server
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+            
+            Task.Run(async () => 
+            {
+                var dbContext = new MainDbContext(new());
+                if ((await dbContext.Database.GetPendingMigrationsAsync()).Any())
+                {
+                    logger.LogInformation("Found migration stuffs");
+                    await dbContext.Database.MigrateAsync();
+                    logger.LogInformation("Migration complete!");
+                }
             });
         }
     }

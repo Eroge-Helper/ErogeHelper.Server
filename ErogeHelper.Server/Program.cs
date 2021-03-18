@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace ErogeHelper.Server
 {
@@ -20,6 +21,9 @@ namespace ErogeHelper.Server
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.UseUrls("http://*:5000");
+                    // XXX: Pay attention to the locate of db.sqlite
+                    // webBuilder.UseContentRoot(Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location));
                     webBuilder.UseStartup<Startup>();
                 });
     }
