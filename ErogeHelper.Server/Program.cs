@@ -22,9 +22,9 @@ namespace ErogeHelper.Server
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseUrls("http://*:5000");
-                    // XXX: Pay attention to the locate of db.sqlite
-                    var path = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) ?? string.Empty;
-                    webBuilder.UseContentRoot(path + @"/../../../../");
+                    // XXX: Pay attention to the locate of db.sqlite, if set a wrong sqlite position would get `SQLite Error 1: 'no such table:`
+                    // var path = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) ?? string.Empty;
+                    // webBuilder.UseContentRoot(path + @"/../../../../");
                     webBuilder.UseStartup<Startup>();
                 });
     }

@@ -9,6 +9,10 @@ using Microsoft.OpenApi.Models;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.Extensions.Logging;
+using System.IO;
+using System;
+using System.Diagnostics;
+using Microsoft.Data.Sqlite;
 
 namespace ErogeHelper.Server
 {
@@ -43,8 +47,13 @@ namespace ErogeHelper.Server
             // XXX: ��Ӧѹ��
             services.AddResponseCompression();
 
+            // var builder = new SqliteConnectionStringBuilder();       
+            // builder.DataSource = Path.GetFullPath(
+            //     Path.Combine(AppDomain.CurrentDomain.GetData("DataDirectory") as string ?? AppDomain.CurrentDomain.BaseDirectory,
+            //     builder.DataSource));
+            // var connectionString = builder.ToString(); // Data Source=/home/ErogeHelper.Server/ErogeHelper.Server/bin/Release/net5.0/publish/
             services.AddDbContext<MainDbContext>(options =>
-                options.UseSqlite("Filename=db.sqlite"));
+                options.UseSqlite(Configuration.GetConnectionString("MainDatabase")));
 
             services.AddSwaggerGen(c =>
             {
@@ -55,8 +64,9 @@ namespace ErogeHelper.Server
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
         {
-            if (env.IsDevelopment())
+            if (true) //env.IsDevelopment())
             {
+                // logger.LogInformation("App under development!");
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ErogeHelper.Server v1"));
