@@ -52,8 +52,9 @@ namespace ErogeHelper.Server
             //     Path.Combine(AppDomain.CurrentDomain.GetData("DataDirectory") as string ?? AppDomain.CurrentDomain.BaseDirectory,
             //     builder.DataSource));
             // var connectionString = builder.ToString(); // Data Source=/home/ErogeHelper.Server/ErogeHelper.Server/bin/Release/net5.0/publish/
+            Trace.WriteLine(Configuration.GetConnectionString("MainDatabase"));
             services.AddDbContext<MainDbContext>(options =>
-                options.UseSqlite(Configuration.GetConnectionString("MainDatabase")));
+                options.UseSqlite(Configuration.GetConnectionString("DataSource=/home/ErogeHelper.Server/ErogeHelper.Server/db.sqlite")));
 
             services.AddSwaggerGen(c =>
             {
