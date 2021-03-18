@@ -16,7 +16,8 @@ namespace ErogeHelper.Server.Data
                 .OnDelete(DeleteBehavior.Cascade);
         }
 
-        public DbSet<Game> Game => Set<Game>();
+        public DbSet<Game> Games => Set<Game>();
         public DbSet<User> User => Set<User>();
+        public DbSet<Subtitle> Subtitles => Set<Subtitle>();
     }
 }

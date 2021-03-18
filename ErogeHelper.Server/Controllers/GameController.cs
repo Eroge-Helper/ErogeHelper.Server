@@ -32,7 +32,7 @@ namespace ErogeHelper.Server.Controllers
                 return NotFound();
             }
 
-            var game = await _dbContext.Game
+            var game = await _dbContext.Games
                 .Where(it => it.Md5 == md5)
                 .FirstOrDefaultAsync();
 
