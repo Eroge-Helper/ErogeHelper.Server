@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ErogeHelper.Server.Migrations
 {
     [DbContext(typeof(MainDbContext))]
-    [Migration("20210316122000_Init")]
+    [Migration("20210317113235_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
