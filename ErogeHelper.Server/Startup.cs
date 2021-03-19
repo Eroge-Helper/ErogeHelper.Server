@@ -91,6 +91,7 @@ namespace ErogeHelper.Server
                 endpoints.MapControllers();
             });
             
+            // FIXME: 即使有新的Migrations这个也不工作
             Task.Run(async () => 
             {
                 var dbContext = new MainDbContext(new());
