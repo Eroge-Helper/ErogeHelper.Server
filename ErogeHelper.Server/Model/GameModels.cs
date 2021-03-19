@@ -8,7 +8,6 @@ namespace ErogeHelper.Server.Model
         public int Id { get; set; }
         public string Md5 { get; set; } = string.Empty;
         public List<GameName> Names { get; set; } = new();
-        public int TextSettingId { get; set; }// TODO: Delete this
         public string TextSettingJson { get; set; } = string.Empty;
         public int CreatorId { get; set; }
         public User Creator { get; set; } = new();
