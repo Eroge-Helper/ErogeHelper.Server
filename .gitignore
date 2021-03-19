@@ -365,4 +365,4 @@ FodyWeavers.xsd
 # Ignore db file
 db.sqlite
 db.sqlite-shm
-db.ehserver.sqlite-wal
+db.sqlite-wal
