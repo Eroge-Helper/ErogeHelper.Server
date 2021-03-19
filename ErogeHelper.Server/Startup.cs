@@ -53,9 +53,11 @@ namespace ErogeHelper.Server
             //     builder.DataSource));
             // var connectionString = builder.ToString(); // Data Source=/home/ErogeHelper.Server/ErogeHelper.Server/bin/Release/net5.0/publish/
             // FIXME: System.ArgumentNullException: Value cannot be null. (Parameter 'connectionString')
+            // ↑ cause appsettings.json hasn't been loaded correctly
             Trace.WriteLine(Configuration.GetConnectionString("MainDatabase"));
             services.AddDbContext<MainDbContext>(options =>
-                options.UseSqlite(Configuration.GetConnectionString("MainDatabase")));
+                // options.UseSqlite(Configuration.GetConnectionString("MainDatabase")));
+                options.UseSqlite("DataSource=/home/ErogeHelper.Server/ErogeHelper.Server/db.sqlite"));
 
             services.AddSwaggerGen(c =>
             {

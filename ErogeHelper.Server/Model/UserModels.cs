@@ -18,7 +18,7 @@ namespace ErogeHelper.Server.Model
         /// <summary>
         /// The permissions that this user has.
         /// </summary>
-        public int Permissions { get; set; }
+        public bool Permissions { get; set; }
 
         /// <summary>
         /// The user's login name.
@@ -46,7 +46,7 @@ namespace ErogeHelper.Server.Model
         public string Language { get; set; } = string.Empty;
 
         /// <summary>
-        /// The user's avatar (file token).
+        /// The user's avatar on avatars.io (file token).
         /// </summary>
         public string Avatar { get; set; } = string.Empty;
 
@@ -54,6 +54,11 @@ namespace ErogeHelper.Server.Model
         /// The user's homepage url.
         /// </summary>
         public string HomePage { get; set; } = string.Empty;
+
+        /// <summary>
+        /// The color used by the user's subtitles or comments. (Hexadecimal color code)
+        /// </summary>
+        public string Color { get; set; } = string.Empty;
 
         /// <summary>
         /// </summary>
@@ -66,5 +71,9 @@ namespace ErogeHelper.Server.Model
         /// <summary>
         /// </summary>
         public DateTime ModifiedTime { get; set; }
+
+        public bool TermLevel { get; set; }
+
+        public bool SubtitleLevel { get; set; }
     }
 }
