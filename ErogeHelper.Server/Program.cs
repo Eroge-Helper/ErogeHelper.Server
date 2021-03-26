@@ -21,12 +21,12 @@ namespace ErogeHelper.Server
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseUrls("http://*:5000");
-                    // XXX: Pay attention to the locate of db.sqlite, if set a wrong sqlite position would get `SQLite Error 1: 'no such table:`
-                    // XXX: Set content root ensure appsetting.json can be loaded
+                    //webBuilder.UseUrls("http://*:5000");
+                    // NOTE: Pay attention to the locate of db.sqlite, if set a wrong sqlite position would get `SQLite Error 1: 'no such table:`
+                    // XXX: Set content root ensure appsettings.json can be loaded
                     // XXX: 默认目录（注释掉）不知为啥log信息贼详细
-                    var path = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) ?? string.Empty;
-                    webBuilder.UseContentRoot(path + @"/../../../../");
+                    //var path = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly()?.Location) ?? string.Empty;
+                    //webBuilder.UseContentRoot(path + @"/../../../../");
                     webBuilder.UseStartup<Startup>();
                 });
     }

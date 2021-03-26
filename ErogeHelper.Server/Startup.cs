@@ -5,24 +5,23 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
-using System.Threading.Tasks;
-using System.Linq;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using System.IO;
-using System;
-using System.Diagnostics;
-using Microsoft.Data.Sqlite;
+using System.Linq;
 
 namespace ErogeHelper.Server
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment hostEnvironment)
         {
+            // idk if this would be help https://stackoverflow.com/a/63170513/12559031
+            _hostEnvironment = hostEnvironment;
             Configuration = configuration;
         }
 
+        private readonly IWebHostEnvironment _hostEnvironment;
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -38,26 +37,20 @@ namespace ErogeHelper.Server
                 });
             });
 
-            services.AddControllers()
-                .AddJsonOptions(options =>
-                {
-                    options.JsonSerializerOptions.IgnoreNullValues = true;
-                });
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.IgnoreNullValues = true;
+                options.JsonSerializerOptions.PropertyNamingPolicy = null;
+            });
 
-            // XXX: ��Ӧѹ��
+            // 返回压缩
             services.AddResponseCompression();
 
-            // var builder = new SqliteConnectionStringBuilder();       
-            // builder.DataSource = Path.GetFullPath(
-            //     Path.Combine(AppDomain.CurrentDomain.GetData("DataDirectory") as string ?? AppDomain.CurrentDomain.BaseDirectory,
-            //     builder.DataSource));
-            // var connectionString = builder.ToString(); // Data Source=/home/ErogeHelper.Server/ErogeHelper.Server/bin/Release/net5.0/publish/
-            // FIXME: System.ArgumentNullException: Value cannot be null. (Parameter 'connectionString')
-            // ↑ cause appsettings.json hasn't been loaded correctly
-            Trace.WriteLine(Configuration.GetConnectionString("MainDatabase"));
             services.AddDbContext<MainDbContext>(options =>
-                // options.UseSqlite(Configuration.GetConnectionString("MainDatabase")));
-                options.UseSqlite("DataSource=/home/ErogeHelper.Server/ErogeHelper.Server/db.sqlite"));
+                //options.UseSqlite(Configuration.GetConnectionString("MainDatabase")));
+                //options.UseSqlite("DataSource=/home/ErogeHelper.Server/ErogeHelper.Server/db.sqlite"));
+                options.UseSqlite($"Data Source={_hostEnvironment.ContentRootPath}/db.sqlite"));
+
 
             services.AddSwaggerGen(c =>
             {
@@ -66,11 +59,11 @@ namespace ErogeHelper.Server
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger)
+        public async void Configure(IApplicationBuilder app, ILogger<Startup> logger, MainDbContext dbContext)
         {
-            if (true) //env.IsDevelopment())
+            if (_hostEnvironment.IsDevelopment())
             {
-                // logger.LogInformation("App under development!");
+                logger.LogInformation("App runs under development!");
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ErogeHelper.Server v1"));
@@ -90,18 +83,23 @@ namespace ErogeHelper.Server
             {
                 endpoints.MapControllers();
             });
-            
-            // FIXME: 即使有新的Migrations这个也不工作
-            Task.Run(async () => 
+
+            logger.LogInformation("Checking migrations...");
+            if ((await dbContext.Database.GetPendingMigrationsAsync()).Any())
             {
-                var dbContext = new MainDbContext(new());
-                if ((await dbContext.Database.GetPendingMigrationsAsync()).Any())
-                {
-                    logger.LogInformation("Found migration stuffs");
-                    await dbContext.Database.MigrateAsync();
-                    logger.LogInformation("Migration complete!");
-                }
-            });
+                logger.LogWarning("Found migration stuffs");
+                await dbContext.Database.MigrateAsync();
+                logger.LogInformation("Migration complete!");
+            }
+            else
+            {
+                logger.LogInformation("Database is latest");
+            }
+
+            // After migration the db file should exist
+            var dbPath = $"{_hostEnvironment.ContentRootPath}/db.sqlite";
+            if (!File.Exists(dbPath))
+                throw new FileNotFoundException("db.sqlite file not found", dbPath);
         }
     }
 }

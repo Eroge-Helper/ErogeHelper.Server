@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace ErogeHelper.Server.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("v1/[controller]")]
     [EnableCors]
     [ApiController]
     public class GameController : ControllerBase
@@ -26,7 +26,7 @@ namespace ErogeHelper.Server.Controllers
         [HttpGet("Setting")]
         public async Task<ActionResult<GameResultData>> QuerySetting(string md5)
         {
-            if (md5 == string.Empty || md5.Length != 32)
+            if (md5.Length != 32)
             {
                 _logger.LogError("Query: Missing game md5 or error length");
                 return NotFound();
