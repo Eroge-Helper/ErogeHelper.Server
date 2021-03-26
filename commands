@@ -2,3 +2,5 @@ dotnet ef migrations add Init --project ErogeHelper.Server
 dotnet ef database update --project ErogeHelper.Server
 select * from sqlite_master where type="table"; sqlite3 查看所有表结构
 curl localhost:5000/api/Game/Setting?md5=ffffffffffffffffffffffffffffffff 测试
+dotnet publish -r ubuntu.20.04-x64 --configuration Release
+unzip publish.zip -d publish

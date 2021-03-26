@@ -16,8 +16,8 @@ namespace ErogeHelper.Server
     {
         public Startup(IConfiguration configuration, IWebHostEnvironment hostEnvironment)
         {
-            // idk if this would be help https://stackoverflow.com/a/63170513/12559031
             _hostEnvironment = hostEnvironment;
+            // idk if this would be help https://stackoverflow.com/a/63170513/12559031
             Configuration = configuration;
         }
 
@@ -63,7 +63,6 @@ namespace ErogeHelper.Server
         {
             if (_hostEnvironment.IsDevelopment())
             {
-                logger.LogInformation("App runs under development!");
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ErogeHelper.Server v1"));
