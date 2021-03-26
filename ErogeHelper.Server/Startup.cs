@@ -95,7 +95,7 @@ namespace ErogeHelper.Server
                 logger.LogInformation("Database is latest");
             }
 
-            // After migration the db file should exist
+            // After migration the db file should exist, this may make non-scene
             var dbPath = $"{_hostEnvironment.ContentRootPath}/db.sqlite";
             if (!File.Exists(dbPath))
                 throw new FileNotFoundException("db.sqlite file not found", dbPath);
