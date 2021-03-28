@@ -61,6 +61,7 @@ namespace ErogeHelper.Server
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public async void Configure(IApplicationBuilder app, ILogger<Startup> logger, MainDbContext dbContext)
         {
+            // Middleware
             if (_hostEnvironment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -83,6 +84,7 @@ namespace ErogeHelper.Server
                 endpoints.MapControllers();
             });
 
+            // other info
             logger.LogInformation("Checking migrations...");
             if ((await dbContext.Database.GetPendingMigrationsAsync()).Any())
             {
@@ -99,6 +101,11 @@ namespace ErogeHelper.Server
             var dbPath = $"{_hostEnvironment.ContentRootPath}/db.sqlite";
             if (!File.Exists(dbPath))
                 throw new FileNotFoundException("db.sqlite file not found", dbPath);
+
+            logger.LogInformation(
+                System.Diagnostics.Process.GetCurrentProcess().ProcessName.Equals("ErogeHelper.Server")
+                    ? "OutOfProcess"
+                    : "InProcess");
         }
     }
 }

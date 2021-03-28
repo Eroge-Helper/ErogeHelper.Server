@@ -1,9 +1,12 @@
 ﻿using ErogeHelper.Server.Data;
 using ErogeHelper.Server.DataModel;
+using ErogeHelper.Server.Model;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,32 +27,87 @@ namespace ErogeHelper.Server.Controllers
         private readonly MainDbContext _dbContext;
 
         [HttpGet("Setting")]
-        public async Task<ActionResult<GameResultData>> QuerySetting(string md5)
+        public async Task<ActionResult<GameQueryResult>> QuerySetting(string md5)
         {
             if (md5.Length != 32)
             {
-                _logger.LogError("Query: Missing game md5 or error length");
-                return NotFound();
+                _logger.LogError("Query: md5 error length");
+                return BadRequest();
             }
 
             var game = await _dbContext.Games
-                .Where(it => it.Md5 == md5)
-                .FirstOrDefaultAsync();
+                .Where(g => g.Md5.Equals(md5))
+                .SingleOrDefaultAsync();
 
             if (game is null)
             {
-                _logger.LogInformation("Query: Game '{1}' not found.", md5);
+                _logger.LogInformation($"Query: Game '{md5}' not found.");
                 return NotFound();
             }
-
-            await _dbContext.Entry(game)
-                .Collection(it => it.Names).LoadAsync();
-
-            return new GameResultData
+            
+            return new GameQueryResult
             {
                 Id = game.Id,
                 TextSettingJson = game.TextSettingJson,
             };
+        }
+
+        [HttpPost("Setting")]
+        public async Task<ActionResult<GameSubmitResult>> SubmitSetting(GameSubmitParams @params)
+        {
+            var user = await _dbContext.Users
+                .Where(it => it.Username == @params.Username && it.Password == @params.Password)
+                .SingleOrDefaultAsync();
+
+            if (user is null)
+                return Unauthorized();
+
+            user.AccessTime = DateTime.UtcNow;
+
+            var game = await _dbContext.Games
+                .Where(g => g.Md5.Equals(@params.Md5))
+                .SingleOrDefaultAsync();
+
+            if (game is null)
+            {
+                game = new Game()
+                {
+                    Md5 = @params.Md5,
+                    Names = @params.Names.Select(it => new GameName
+                    {
+                        Type = it.Type,
+                        Value = it.Value
+                    }).ToList(),
+                    TextSettingJson = @params.TextSetting,
+                    CreatorId = user.Id,
+                    CreationTime = DateTime.UtcNow,
+                    ModifiedTime = DateTime.UtcNow
+                };
+
+                await _dbContext.Games.AddAsync(game);
+            }
+            else
+            {
+                foreach (var gameName in @params.Names)
+                {
+                    if (!game.Names.Any(it => it.Value.Equals(gameName.Value)))
+                    {
+                        var newGameName = new GameName()
+                        {
+                            Type = gameName.Type,
+                            Value = gameName.Value,
+                        };
+                        game.Names.Add(newGameName);
+                    }
+                }
+
+                game.TextSettingJson = @params.TextSetting;
+                game.ModifiedTime = DateTime.UtcNow;
+            }
+
+            await _dbContext.SaveChangesAsync();
+
+            return new GameSubmitResult { Id = game.Id };
         }
     }
 }

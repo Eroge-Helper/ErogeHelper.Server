@@ -11,10 +11,12 @@ namespace ErogeHelper.Server
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
+            // json setting, logger etc
             Host.CreateDefaultBuilder(args)
+                // begin configures
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    // FIXME: 似乎很不安全。。但我还不知道该怎么改
+                    // FIXME: Not safe
                     webBuilder.UseUrls("http://*:5000");
                     webBuilder.UseStartup<Startup>();
                 });
