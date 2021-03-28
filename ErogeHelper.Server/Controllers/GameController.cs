@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -37,7 +36,7 @@ namespace ErogeHelper.Server.Controllers
 
             var game = await _dbContext.Games
                 .Where(g => g.Md5.Equals(md5))
-                .SingleOrDefaultAsync();
+                .SingleOrDefaultAsync() ?? null;
 
             if (game is null)
             {
@@ -57,7 +56,7 @@ namespace ErogeHelper.Server.Controllers
         {
             var user = await _dbContext.Users
                 .Where(it => it.Username == @params.Username && it.Password == @params.Password)
-                .SingleOrDefaultAsync();
+                .SingleOrDefaultAsync() ?? null;
 
             if (user is null)
                 return Unauthorized();
@@ -66,7 +65,7 @@ namespace ErogeHelper.Server.Controllers
 
             var game = await _dbContext.Games
                 .Where(g => g.Md5.Equals(@params.Md5))
-                .SingleOrDefaultAsync();
+                .SingleOrDefaultAsync() ?? null;
 
             if (game is null)
             {
