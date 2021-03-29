@@ -18,7 +18,10 @@ namespace ErogeHelper.Server.Model
         public Game Game { get; set; } = new();
 
         #region Original Text Info
+
         public long Hash { get; set; }
+
+        public string HashString { get; set; } = string.Empty;
 
         /// <summary>
         /// Suggest size by vnr
@@ -29,7 +32,8 @@ namespace ErogeHelper.Server.Model
         /// 元のText
         /// </summary>
         public string Content { get; set; } = string.Empty;
-        # endregion Original Text Info
+
+        # endregion
 
         /// <summary>
         /// Foreign key
@@ -51,6 +55,8 @@ namespace ErogeHelper.Server.Model
 
         public DateTime CreationTime { get; set; }
 
+        public long CreationTimeUnix { get; set; }
+
         /// <summary>
         /// Foreign key
         /// </summary>
@@ -61,9 +67,14 @@ namespace ErogeHelper.Server.Model
         /// </summary>
         public User Editor { get; set; } = new();
 
+        /// <summary>
+        /// Comment 备注
+        /// </summary>
         public string RevisionSubtitle { get; set; } = string.Empty;
 
         public DateTime RevisionTime { get; set; }
+
+        public long RevisionTimeUnix { get; set; }
 
         public bool Deleted { get; set; }
     }

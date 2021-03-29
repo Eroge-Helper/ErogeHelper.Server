@@ -68,6 +68,8 @@ namespace ErogeHelper.Server.Controllers
             if (user.Password == string.Empty)
             {
                 user.Password = @params.Password;
+                user.CreationTime = DateTime.UtcNow;
+                user.ModifiedTime = DateTime.UtcNow;
             }
             else if (!user.Password.Equals(@params.Password))
             {
@@ -166,5 +168,8 @@ namespace ErogeHelper.Server.Controllers
 
             //return Ok();
         }
+
+        //[HttpGet]
+        // public async Task<ActionResult<>> Query(int userId)
     }
 }

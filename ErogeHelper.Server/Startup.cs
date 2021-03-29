@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using ErogeHelper.Server.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -103,7 +104,7 @@ namespace ErogeHelper.Server
                 throw new FileNotFoundException("db.sqlite file not found", dbPath);
 
             logger.LogInformation(
-                System.Diagnostics.Process.GetCurrentProcess().ProcessName.Equals("ErogeHelper.Server")
+                Process.GetCurrentProcess().ProcessName.Equals("ErogeHelper.Server")
                     ? "OutOfProcess"
                     : "InProcess");
         }

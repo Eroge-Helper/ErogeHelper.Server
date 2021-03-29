@@ -3,14 +3,16 @@ using System;
 using ErogeHelper.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ErogeHelper.Server.Migrations
 {
     [DbContext(typeof(MainDbContext))]
-    partial class MainDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210328172257_SubtitleUnixTime")]
+    partial class SubtitleUnixTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -107,10 +109,6 @@ namespace ErogeHelper.Server.Migrations
 
                     b.Property<long>("Hash")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("HashString")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("Language")
                         .IsRequired()
