@@ -9,6 +9,7 @@ namespace ErogeHelper.Server.Model
         public string Md5 { get; set; } = string.Empty;
         public List<GameName> Names { get; set; } = new();
         public string TextSettingJson { get; set; } = string.Empty;
+        public string RegExp { get; set; } = string.Empty;
         public int CreatorId { get; set; }
         public User Creator { get; set; } = new();
         public DateTime CreationTime { get; set; }

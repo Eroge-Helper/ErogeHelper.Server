@@ -7,6 +7,7 @@ namespace ErogeHelper.Server.DataModel
     {
         public int Id { get; set; }
         public string TextSettingJson { get; set; } = string.Empty;
+        public string RegExp { get; set; } = string.Empty;
     }
 
     public class GameSubmitParams
@@ -28,6 +29,8 @@ namespace ErogeHelper.Server.DataModel
 
         [Required] 
         public string TextSetting { get; set; } = string.Empty;
+
+        public string RegExp { get; set; } = string.Empty;
     }
 
     public class GameNameSubmitParams

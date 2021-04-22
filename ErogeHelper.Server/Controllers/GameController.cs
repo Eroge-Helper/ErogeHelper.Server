@@ -48,6 +48,7 @@ namespace ErogeHelper.Server.Controllers
             {
                 Id = game.Id,
                 TextSettingJson = game.TextSettingJson,
+                RegExp = game.RegExp
             };
         }
 
@@ -65,6 +66,7 @@ namespace ErogeHelper.Server.Controllers
 
             var game = await _dbContext.Games
                 .Where(g => g.Md5.Equals(@params.Md5))
+                .Include(g => g.Names)
                 .SingleOrDefaultAsync() ?? null;
 
             if (game is null)
@@ -78,6 +80,7 @@ namespace ErogeHelper.Server.Controllers
                         Value = it.Value
                     }).ToList(),
                     TextSettingJson = @params.TextSetting,
+                    RegExp = @params.RegExp,
                     CreatorId = user.Id,
                     CreationTime = DateTime.UtcNow,
                     ModifiedTime = DateTime.UtcNow
@@ -101,6 +104,7 @@ namespace ErogeHelper.Server.Controllers
                 }
 
                 game.TextSettingJson = @params.TextSetting;
+                game.RegExp = @params.RegExp;
                 game.ModifiedTime = DateTime.UtcNow;
             }
 
