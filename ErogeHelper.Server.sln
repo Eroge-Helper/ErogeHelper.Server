@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
-VisualStudioVersion = 16.0.31105.61
+VisualStudioVersion = 16.0.31129.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ErogeHelper.Server", "ErogeHelper.Server\ErogeHelper.Server.csproj", "{3AD8BA22-DEA6-4E8C-BA85-A5474FB2ED51}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ErogeHelper.Server", "ErogeHelper.Server\ErogeHelper.Server.csproj", "{EE0B38A0-CEE0-4FD4-8344-DA1053319F10}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3AD8BA22-DEA6-4E8C-BA85-A5474FB2ED51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3AD8BA22-DEA6-4E8C-BA85-A5474FB2ED51}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3AD8BA22-DEA6-4E8C-BA85-A5474FB2ED51}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3AD8BA22-DEA6-4E8C-BA85-A5474FB2ED51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE0B38A0-CEE0-4FD4-8344-DA1053319F10}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE0B38A0-CEE0-4FD4-8344-DA1053319F10}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE0B38A0-CEE0-4FD4-8344-DA1053319F10}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE0B38A0-CEE0-4FD4-8344-DA1053319F10}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {62819BA1-2C02-468D-B09C-FE44E81F9ED0}
+		SolutionGuid = {E81DA801-85D8-4770-989B-9867E3311750}
 	EndGlobalSection
 EndGlobal

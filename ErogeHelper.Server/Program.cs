@@ -1,5 +1,11 @@
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ErogeHelper.Server
 {
@@ -11,13 +17,9 @@ namespace ErogeHelper.Server
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
-            // json setting, logger etc
             Host.CreateDefaultBuilder(args)
-                // begin configures
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    // FIXME: Not safe
-                    webBuilder.UseUrls("http://*:5000");
                     webBuilder.UseStartup<Startup>();
                 });
     }
