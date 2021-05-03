@@ -82,6 +82,7 @@ namespace ErogeHelper.Server.Controllers
                     TextSettingJson = @params.TextSetting,
                     RegExp = @params.RegExp,
                     CreatorId = user.Id,
+                    Creator = user,
                     CreationTime = DateTime.UtcNow,
                     ModifiedTime = DateTime.UtcNow
                 };
