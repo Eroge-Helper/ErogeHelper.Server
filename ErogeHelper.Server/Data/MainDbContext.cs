@@ -21,5 +21,6 @@ namespace ErogeHelper.Server.Data
         public DbSet<Game> Games => Set<Game>();
         public DbSet<User> Users => Set<User>();
         public DbSet<Subtitle> Subtitles => Set<Subtitle>();
+        public DbSet<Comment> Comments => Set<Comment>();
     }
 }

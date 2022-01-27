@@ -15,85 +15,84 @@ using ErogeHelper.Server.Data;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
-namespace ErogeHelper.Server
+namespace ErogeHelper.Server;
+
+public class Startup
 {
-    public class Startup
+    public Startup(IConfiguration configuration)
     {
-        public Startup(IConfiguration configuration)
+        Configuration = configuration;
+    }
+
+    public IConfiguration Configuration { get; }
+
+    // This method gets called by the runtime. Use this method to add services to the container.
+    public void ConfigureServices(IServiceCollection services)
+    {
+        services.AddCors(options =>
         {
-            Configuration = configuration;
+            options.AddDefaultPolicy(builder =>
+            {
+                builder.AllowAnyOrigin();
+                builder.AllowAnyHeader();
+                builder.AllowAnyMethod();
+            });
+        });
+
+        services.AddControllers();
+
+        services.AddResponseCompression();
+
+        const string connectionString = "";
+        var serverVersion = new MySqlServerVersion(new Version(5, 6, 50));
+
+        services.AddDbContextPool<MainDbContext>(
+                dbContextOptions => dbContextOptions
+                    .UseMySql(connectionString, serverVersion)
+                    .EnableSensitiveDataLogging() // These two calls are optional but help
+                    .EnableDetailedErrors());     // with debugging (remove for production).
+
+        services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "ErogeHelper.Server", Version = "v1" });
+        });
+    }
+
+    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger, MainDbContext dbContext)
+    {
+        if (env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+            app.UseSwagger();
+            app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ErogeHelper.Server v1"));
         }
 
-        public IConfiguration Configuration { get; }
+        app.UseHttpsRedirection();
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        app.UseRouting();
+
+        app.UseCors();
+
+        app.UseAuthorization();
+
+        app.UseResponseCompression();
+
+        app.UseEndpoints(endpoints =>
         {
-            services.AddCors(options =>
-            {
-                options.AddDefaultPolicy(builder =>
-                {
-                    builder.AllowAnyOrigin();
-                    builder.AllowAnyHeader();
-                    builder.AllowAnyMethod();
-                });
-            });
+            endpoints.MapControllers();
+        });
 
-            services.AddControllers();
-
-            services.AddResponseCompression();
-
-            const string connectionString = "";
-            var serverVersion = new MySqlServerVersion(new Version(5, 6, 50));
-
-            services.AddDbContextPool<MainDbContext>(
-                    dbContextOptions => dbContextOptions
-                        .UseMySql(connectionString, serverVersion)
-                        .EnableSensitiveDataLogging() // These two calls are optional but help
-                        .EnableDetailedErrors());     // with debugging (remove for production).
-
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ErogeHelper.Server", Version = "v1" });
-            });
+        logger.LogInformation("Checking migrations...");
+        if ((dbContext.Database.GetPendingMigrations()).Any())
+        {
+            logger.LogWarning("Found migration stuffs");
+            dbContext.Database.MigrateAsync();
+            logger.LogInformation("Migration complete!");
         }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public async void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILogger<Startup> logger, MainDbContext dbContext)
+        else
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ErogeHelper.Server v1"));
-            }
-
-            app.UseHttpsRedirection();
-
-            app.UseRouting();
-
-            app.UseCors();
-
-            app.UseAuthorization();
-
-            app.UseResponseCompression();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-
-            logger.LogInformation("Checking migrations...");
-            if ((await dbContext.Database.GetPendingMigrationsAsync()).Any())
-            {
-                logger.LogWarning("Found migration stuffs");
-                await dbContext.Database.MigrateAsync();
-                logger.LogInformation("Migration complete!");
-            }
-            else
-            {
-                logger.LogInformation("Database is latest");
-            }
+            logger.LogInformation("Database is latest");
         }
     }
 }
